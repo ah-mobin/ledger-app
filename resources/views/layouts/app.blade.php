@@ -10,6 +10,8 @@
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- Custom styles for this Page-->
     @yield('custom_styles')
 
@@ -58,9 +60,9 @@
 
 			</div>
 			<div class="page-wrapper">
-			
+
 				@yield('content')
-				
+
 				<footer class="footer footer-transparent d-print-none">
 					<div class="container-xl">
 						<div class="row text-center align-items-center flex-row-reverse">
@@ -82,7 +84,7 @@
 							<div class="col-12 col-lg-auto mt-3 mt-lg-0">
 								<ul class="list-inline list-inline-dots mb-0">
 									<li class="list-inline-item">
-										&copy; {{ date('Y') }} 
+										&copy; {{ date('Y') }}
 										<a href="{{ config('app.url') }}" class="link-secondary">{{ config('app.name') }}</a>
 									</li>
 									<li class="list-inline-item">
