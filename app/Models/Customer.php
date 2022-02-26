@@ -11,6 +11,11 @@ class Customer extends Model
 {
     use HasFactory, SoftDeletes, Searchable;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'name',
         'phone_number',
