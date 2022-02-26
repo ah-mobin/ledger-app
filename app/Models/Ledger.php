@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class Ledger extends Model
 {
@@ -37,19 +38,23 @@ class Ledger extends Model
     protected static function booted()
     {
         static::created(function ($ledger) {
-            if($ledger->type != "Ledger Open"){
-                $instance = Ledger::find($ledger->id);
-                $balance = Ledger::whereCustomerId($instance->customer_id)->orderBy('id','desc')->get()[1]->balance;
-                
-                if($ledger->type == 'Due Added'){
-                    $instance->balance = $balance + $instance->amount;
+            try{
+                if($ledger->type != "Ledger Open"){
+                    $instance = Ledger::find($ledger->id);
+                    $balance = Ledger::whereCustomerId($instance->customer_id)->orderBy('id','desc')->get()[1]->balance;
+                    
+                    if($ledger->type == 'Due Added'){
+                        $instance->balance = $balance + $instance->amount;
+                    }
+                    
+                    if($ledger->type == 'Due Deducted'){
+                        $instance->balance = $balance - $instance->amount;
+                    }
+    
+                    $instance->save();
                 }
-                
-                if($ledger->type == 'Due Deducted'){
-                    $instance->balance = $balance - $instance->amount;
-                }
-
-                $instance->save();
+            }catch(\Exception | \Throwable $e){
+                Log::critical($e->getMessage());
             }             
         });
     }
