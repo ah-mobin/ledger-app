@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained();
             $table->enum('type',['Ledger Open','Due Added','Due Deducted']);
-            $table->decimal('amount',16,4);
-            $table->decimal('balance',16,4)->nullable();
+            $table->integer('amount');
+            $table->integer('balance')->nullable();
             $table->date('date');
             $table->timestamps();
             $table->softDeletes();

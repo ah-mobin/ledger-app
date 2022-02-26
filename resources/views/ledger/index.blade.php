@@ -15,7 +15,7 @@
             @include('layouts.flash_alerts')
 
             <div class="alert alert-info overflow-hidden">
-                <div class="alert-title float-start">Ledger Data: Customer -> <span class="text-danger"> {{ $ledger[0]->customer->name }} </span> </div>
+                <div class="alert-title float-start">Ledger Data: Customer -> <span class="text-danger"> {{ $customer->customer->name }} </span> </div>
                 <button type="button" class="btn btn-sm btn-success rounder float-end" data-bs-toggle="modal" data-bs-target="#customerAdd">
                     Update Ledger
                 </button>
@@ -24,9 +24,15 @@
             <div class="card">
 
                 <div>
-                    <form action="{{ route('customers.ledger.index',$ledger[0]->customer_id) }}" method="GET" class="w-75 d-flex justify-content-between my-3">
-                        <input type="text" class="form-control"  placeholder="Search by date or type..." name="search">
-                        <button class="btn btn-primary ms-2">Search</button>
+                    <form action="{{ route('customers.ledger.index',$customer->customer_id) }}" method="GET" class="w-75 d-flex justify-content-between my-3">
+                        <input type="date" class="form-control" name="date">
+                        <select name="type" class="form-control">
+                            <option selected disabled>Choose Type</option>
+                            <option value="all">All</option>
+                            <option value="Due Added">Due Add</option>
+                            <option value="Due Deducted">Payment From Customer</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary ms-2">Search</button>
                     </form>
                 </div>
 
@@ -36,22 +42,20 @@
                         <tr>
                             <th>{{ __('Date') }}</th>
                             <th>{{ __('Type') }}</th>
-                            <th>{{ __('Amount') }}</th>
+                            <th>{{ __('Amount') }} ({{ config('settings.currency') }})</th>
                         </tr>
                         </thead>
                         <tbody>
                         @forelse($ledger as $item)
                             <tr>
-                                <td>{{ $item->date->format('d-m-y') }}</td>
-                                <td>{{ $item->type }}</td>
+                                <td>{{ $item->date->format('Y-m-d') }}</td>
+                                <td>{{ $item->type == 'Due Deducted' ? 'Payment From Customer' : $item->type }}</td>
                                 <td>{{ $item->amount }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3">
-                                    <button type="button" class="btn btn-sm btn-success rounder float-end" data-bs-toggle="modal" data-bs-target="#customerAdd">
-                                        Open Ledger
-                                    </button>
+                                <td colspan="3" class="text-center">
+                                    No Data Found
                                 </td>
                             </tr>
                         @endforelse
@@ -67,7 +71,7 @@
 
 
             <div class="card mt-4">
-                <h2 class="text-danger">Total Due: {{ number_format($ledger[0]->balance,2) }}</h2>
+                <h2 class="text-danger">Total Due: {{ config('settngs.currency') .' '.$customer->balance }}</h2>
             </div>
         </div>
     </div>
@@ -79,7 +83,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="customerAddLabel">Ledger Update</h5>
                 </div>
-                <form action="{{ route('customers.ledger.store',$ledger[0]->customer_id) }}" method="POST">
+                <form action="{{ route('customers.ledger.store',$customer->customer_id) }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group mb-3">
@@ -87,7 +91,7 @@
                             <select name="type" class="form-control" id="type">
                                 <option selected disabled>Select an option</option>
                                 <option value="Due Added">Due Add</option>
-                                <option value="Due Deducted">Due Deduct</option>
+                                <option value="Due Deducted">Payment From Customer</option>
                             </select>
                         </div>
 
@@ -97,11 +101,11 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="amount">Amount</label>
+                            <label for="amount">Amount ({{ config('settings.currency') }})</label>
                             <input type="number" name="amount" class="form-control" placeholder="500" value="{{ old('amount') }}" id="amount">
                         </div>
 
-                        <input type="hidden" name="customer_id" value="{{ $ledger[0]->customer_id }}">
+                        <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
 
                     </div>
                     <div class="modal-footer">

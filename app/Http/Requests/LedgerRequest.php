@@ -31,7 +31,7 @@ class LedgerRequest extends FormRequest
             ))],
             'type' => 'required',
             'date' => 'nullable',
-            'amount' => 'required|numeric|gt:0',
+            'amount' => 'required|integer|gt:0',
         ];
     }
 }

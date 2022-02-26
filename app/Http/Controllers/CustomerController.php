@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Http\Requests\CustomerStoreRequest;
 use App\Http\Requests\CustomerUpdateRequest;
+use App\Models\Ledger;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
@@ -19,12 +21,25 @@ class CustomerController extends Controller
     {
         try{
             $customers = Customer::search(request('search'))->paginate();
-            return view('customers.index',compact('customers'));
+            $total = Ledger::where('type','Due Added')->sum('amount');
+            $deducts = Ledger::where('type','Due Deducted')->sum('amount');
+            $dues = $total - $deducts;
+            return view('customers.index',compact('customers','dues'));
         }catch(\Exception | \Throwable $e){
             Log::critical($e->getMessage());
             session()->flash('danger','Something Went Wrong');
             return back();
         }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -42,12 +57,34 @@ class CustomerController extends Controller
                 'phone_number' => $request->phone_number,
             ]);
             session()->flash('success','Customer Created Successful');
-            return back();
         }catch(\Exception | \Throwable $e){
             Log::critical($e->getMessage());
             session()->flash('danger','Something Went Wrong');
-            return back();
         }
+
+        return back();
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Customer  $customer
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Customer $customer)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Customer  $customer
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Customer $customer)
+    {
+        //
     }
 
     /**

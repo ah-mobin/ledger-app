@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
@@ -21,6 +22,12 @@ class Customer extends Model
         'phone_number',
         'email'
     ];
+
+
+    public function customerLedger(): HasMany
+    {
+        return $this->hasMany(Ledger::class,'customer_id','id');
+    }
 
     public function toSearchableArray()
     {

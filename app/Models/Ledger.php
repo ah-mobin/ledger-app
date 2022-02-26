@@ -37,14 +37,20 @@ class Ledger extends Model
     protected static function booted()
     {
         static::created(function ($ledger) {
-            $instance = Ledger::find($ledger->id);
-            $balance = Ledger::whereCustomerId($instance->customer_id)->orderBy('id','desc')->get()[1]->balance;
-            if($ledger->type == 'Due Added'){
-                $instance->balance = $balance + $instance->amount;
-            }elseif($ledger->type == 'Due Deducted'){
-                $instance->balance = $balance - $instance->amount;
-            }
-            $instance->save();
+            if($ledger->type != "Ledger Open"){
+                $instance = Ledger::find($ledger->id);
+                $balance = Ledger::whereCustomerId($instance->customer_id)->orderBy('id','desc')->get()[1]->balance;
+                
+                if($ledger->type == 'Due Added'){
+                    $instance->balance = $balance + $instance->amount;
+                }
+                
+                if($ledger->type == 'Due Deducted'){
+                    $instance->balance = $balance - $instance->amount;
+                }
+
+                $instance->save();
+            }             
         });
     }
 

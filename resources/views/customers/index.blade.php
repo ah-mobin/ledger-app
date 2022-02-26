@@ -4,7 +4,7 @@
     <div class="container-xl">
         <!-- Page title -->
         <div class="page-header d-print-none">
-            <h2 class="page-title">
+            <h2 class="page-title float-left">
                 {{ __('Customers') }}
             </h2>
         </div>
@@ -14,9 +14,10 @@
 
             @include('layouts.flash_alerts')
 
-            <div class="alert alert-info overflow-hidden">
-                <div class="alert-title float-start">Customer Data</div>
-                <button type="button" class="btn btn-sm btn-success rounder float-end" data-bs-toggle="modal" data-bs-target="#customerAdd">
+            <div class="alert alert-info d-flex justify-content-between">
+                <div class="alert-title">Customer Data</div>
+                <h3 class="text-danger ">Total Dues: {{ config('settings.currency') }} {{ $dues }}</h3>
+                <button type="button" class="btn btn-sm btn-success rounder" data-bs-toggle="modal" data-bs-target="#customerAdd">
                     Add Customer
                 </button>
             </div>
@@ -37,6 +38,7 @@
                             <th>{{ __('Name') }}</th>
                             <th>{{ __('Email Address') }}</th>
                             <th>{{ __('Phone Number') }}</th>
+                            <th>{{ __('Dues') }} ({{ config('settings.currency') }})</th>
                             <th>{{ __('Created at') }}</th>
                             <th>{{ __('Actions') }}</th>
                         </tr>
@@ -47,6 +49,10 @@
                                 <td>{{ $customer->name }}</td>
                                 <td>{{ $customer->email }}</td>
                                 <td>{{ $customer->phone_number }}</td>
+                                <td>
+                                    {{ $total = App\Models\Ledger::whereCustomerId($customer->id)->latest()->first()->balance }}
+                                     
+                                </td>
                                 <td>{{ $customer->created_at->diffForhumans() }}</td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#customerEdit{{ $customer->id }}" title="Edit Customer Info">
