@@ -8,6 +8,7 @@ use App\Http\Requests\CustomerUpdateRequest;
 use App\Models\Ledger;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
@@ -40,15 +41,18 @@ class CustomerController extends Controller
      */
     public function store(CustomerStoreRequest $request): View|RedirectResponse
     {
+        DB::beginTransaction();
         try{
             Customer::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone_number' => $request->phone_number,
             ]);
+            DB::commit();
             session()->flash('success','Customer Created Successful');
             return back();
         }catch(\Exception | \Throwable $e){
+            DB::rollBack();
             Log::critical($e->getMessage());
             session()->flash('danger','Something Went Wrong');
             return view('errors.500');

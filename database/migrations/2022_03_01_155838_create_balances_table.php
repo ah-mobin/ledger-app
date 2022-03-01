@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ledgers', function (Blueprint $table) {
+        Schema::create('balances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained();
-            $table->foreignId('payment_type_id')->constrained();
-            $table->integer('amount');
-            $table->date('date');
+            $table->integer('due_amount');
+            $table->integer('customer_balance');
+            $table->integer('bonus_amount');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ledgers');
+        Schema::dropIfExists('balances');
     }
 };

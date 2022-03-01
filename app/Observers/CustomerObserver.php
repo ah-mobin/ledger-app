@@ -2,6 +2,8 @@
 
 namespace App\Observers;
 
+use App\Constants\PaymentTypeConstants;
+use App\Models\Balance;
 use App\Models\Customer;
 use App\Models\Ledger;
 use Carbon\Carbon;
@@ -19,10 +21,16 @@ class CustomerObserver
     {
         Ledger::create([
             'customer_id' => $customer->id,
-            'type' => 'Ledger Open',
+            'payment_type_id' => PaymentTypeConstants::LEDGER_OPEN,
             'amount' => 0,
-            'balance' => 0,
             'date' => Carbon::now()
+        ]);
+
+        Balance::create([
+            'customer_id' => $customer->id,
+            'due_amount' => 0,
+            'customer_balance' => 0,
+            'bonus_amount' => 0,
         ]);
     }
 
