@@ -28,9 +28,9 @@
                         <input type="date" class="form-control" name="date">
                         <select name="type" class="form-control">
                             <option selected disabled>Choose Type</option>
-                            <option value="all">All</option>
-                            <option value="Due Added">Due Add</option>
-                            <option value="Due Deducted">Payment From Customer</option>
+                            @foreach($types as $type)
+                                <option value="{{ $type->id }}">{{ $type->type }}</option>
+                            @endforeach
                         </select>
                         <button type="submit" class="btn btn-primary ms-2">Search</button>
                     </form>
@@ -71,7 +71,7 @@
 
 
             <div class="card mt-4">
-                <h2 class="text-danger">Total Due: {{ config('settngs.currency') .' '.$customer->balance }}</h2>
+{{--                <h2 class="text-danger">Total Due: {{ config('settngs.currency') .' '.$customer->balance }}</h2>--}}
             </div>
         </div>
     </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LedgerRequest;
 use App\Models\Customer;
 use App\Models\Ledger;
+use App\Models\PaymentType;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -15,15 +16,17 @@ class LedgerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Customer $id
+     * @param $id
      * @return RedirectResponse|View
      */
-    public function index(Customer $id): RedirectResponse|View
+    public function index($id): RedirectResponse|View
     {
         try{
             $title = "Customer Ledger";
 
-            $customer = Ledger::whereCustomerId($id)->latest()->first();
+            $customer = Ledger::whereCustomerId($id)->first();
+
+            $types = PaymentType::select('id','type')->get();
 
             $ledger = Ledger::query()
                         ->when(request('date'),function($query){
@@ -31,13 +34,13 @@ class LedgerController extends Controller
                         })
                         ->when(request('type'),function($query){
                             if(request('type') != 'all'){
-                                $query->where('type',request('type'));
+                                $query->where('payment_type_id',request('type'));
                             }
                         })
                         ->where('customer_id',$id)
                         ->paginate();
 
-            return view('ledger.index',compact('ledger','customer','title'));
+            return view('ledger.index',compact('ledger','customer','title','types'));
         }catch(\Exception | \Throwable $e){
             Log::critical($e->getMessage());
             session()->flash('danger','Something Went Wrong');

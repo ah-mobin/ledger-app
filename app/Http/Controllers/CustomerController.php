@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Balance;
 use App\Models\Customer;
 use App\Http\Requests\CustomerStoreRequest;
 use App\Http\Requests\CustomerUpdateRequest;
@@ -23,10 +24,9 @@ class CustomerController extends Controller
         try{
             $title = "Customers";
             $customers = Customer::search(request('search'))->paginate();
-            $total = Ledger::where('type','Due Added')->sum('amount');
-            $deducts = Ledger::where('type','Due Deducted')->sum('amount');
-            $dues = $total - $deducts;
-            return view('customers.index',compact('customers','dues','title'));
+            $totalDues = Balance::sum('due_amount');
+            $totalCustomerBalance = Balance::sum('customer_balance');
+            return view('customers.index',compact('customers','totalDues','totalCustomerBalance','title'));
         }catch(\Exception | \Throwable $e){
             Log::critical($e->getMessage());
             return view('errors.500');

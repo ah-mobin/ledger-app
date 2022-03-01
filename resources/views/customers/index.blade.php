@@ -16,7 +16,8 @@
 
             <div class="alert alert-info d-flex justify-content-between">
                 <div class="alert-title">Customer Data</div>
-                <h3 class="text-danger ">Total Dues: {{ config('settings.currency') }} {{ $dues }}</h3>
+                <h3 class="text-danger ">Total Dues: {{ config('settings.currency') }} {{ $totalDues }}</h3>
+                <h3 class="text-danger ">Total Customer Balances: {{ config('settings.currency') }} {{ $totalCustomerBalance }}</h3>
                 <button type="button" class="btn btn-sm btn-success rounder" data-bs-toggle="modal" data-bs-target="#customerAdd">
                     Add Customer
                 </button>
@@ -39,6 +40,7 @@
                             <th>{{ __('Email Address') }}</th>
                             <th>{{ __('Phone Number') }}</th>
                             <th>{{ __('Dues') }} ({{ config('settings.currency') }})</th>
+                            <th>{{ __('Balance') }} ({{ config('settings.currency') }})</th>
                             <th>{{ __('Created at') }}</th>
                             <th>{{ __('Actions') }}</th>
                         </tr>
@@ -49,10 +51,8 @@
                                 <td>{{ $customer->name }}</td>
                                 <td>{{ $customer->email }}</td>
                                 <td>{{ $customer->phone_number }}</td>
-                                <td>
-                                    {{ $total = App\Models\Ledger::whereCustomerId($customer->id)->latest()->first()->balance }}
-                                     
-                                </td>
+                                <td>{{ $customer->customerBalance->due_amount }}</td>
+                                <td>{{ $customer->customerBalance->customer_balance }}</td>
                                 <td>{{ $customer->created_at->diffForhumans() }}</td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#customerEdit{{ $customer->id }}" title="Edit Customer Info">
