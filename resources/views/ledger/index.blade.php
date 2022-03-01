@@ -16,7 +16,7 @@
 
             <div class="alert alert-info overflow-hidden">
                 <div class="alert-title float-start">Ledger Data: Customer -> <span class="text-danger"> {{ $customer->customer->name }} </span> </div>
-                <button type="button" class="btn btn-sm btn-success rounder float-end" data-bs-toggle="modal" data-bs-target="#customerAdd">
+                <button type="button" class="btn btn-sm btn-success rounder float-end" data-bs-toggle="modal" data-bs-target="#customerLedgerAdd">
                     Update Ledger
                 </button>
             </div>
@@ -43,15 +43,70 @@
                             <th>{{ __('Date') }}</th>
                             <th>{{ __('Type') }}</th>
                             <th>{{ __('Amount') }} ({{ config('settings.currency') }})</th>
+                            <th>{{ __('Update') }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         @forelse($ledger as $item)
                             <tr>
                                 <td>{{ $item->date->format('Y-m-d') }}</td>
-                                <td>{{ $item->type == 'Due Deducted' ? 'Payment From Customer' : $item->type }}</td>
+                                <td>{{ $item->paymentType->type }}</td>
                                 <td>{{ $item->amount }}</td>
+                                <td>
+                                    @if($item->payment_type_id != \App\Constants\PaymentTypeConstants::LEDGER_OPEN)
+                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#ledgerEdit{{ $item->id }}" title="Edit Ledger Data">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    @endif
+                                </td>
                             </tr>
+
+
+
+                            @if($item->payment_type_id != \App\Constants\PaymentTypeConstants::LEDGER_OPEN)
+                            <!-- Update Ledger Modal -->
+                            <div class="modal fade" id="ledgerEdit{{ $item->id }}" tabindex="-1" aria-labelledby="ledgerEditLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="ledgerEditLabel">Ledger Update</h5>
+                                        </div>
+                                        <form action="{{ route('customers.ledger.store',$item->id) }}" method="POST">
+                                            @csrf
+                                            <div class="modal-body">
+                                                <div class="form-group mb-3">
+                                                    <label for="type">Type</label>
+                                                    <select name="type" class="form-control" id="type">
+                                                        <option selected disabled>Select an option</option>
+                                                        @foreach($types as $type)
+                                                            <option value="{{ $type->id }}" @selected($type->id == $item->payment_type_id)>{{ $type->type }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group mb-3">
+                                                    <label for="date">Date</label>
+                                                    <input type="text" class="form-control" readonly disabled value="{{ $item->date->format('d/m/y') }}">
+                                                    <input type="date" name="date" class="form-control" id="date">
+                                                </div>
+
+                                                <div class="form-group mb-3">
+                                                    <label for="amount">Amount ({{ config('settings.currency') }})</label>
+                                                    <input type="number" name="amount" class="form-control" value="{{ $item->amount }}" id="amount">
+                                                </div>
+
+                                                <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary btn-sm">Create</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         @empty
                             <tr>
                                 <td colspan="3" class="text-center">
@@ -76,12 +131,12 @@
         </div>
     </div>
 
-    <!-- Create Customer Modal -->
-    <div class="modal fade" id="customerAdd" tabindex="-1" aria-labelledby="customerAddLabel" aria-hidden="true">
+    <!-- Create Customer Ledger Modal -->
+    <div class="modal fade" id="customerLedgerAdd" tabindex="-1" aria-labelledby="customerLedgerAddLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="customerAddLabel">Ledger Update</h5>
+                    <h5 class="modal-title" id="customerLedgerAddLabel">Ledger Update</h5>
                 </div>
                 <form action="{{ route('customers.ledger.store',$customer->customer_id) }}" method="POST">
                     @csrf
@@ -90,8 +145,9 @@
                             <label for="type">Type</label>
                             <select name="type" class="form-control" id="type">
                                 <option selected disabled>Select an option</option>
-                                <option value="Due Added">Due Add</option>
-                                <option value="Due Deducted">Payment From Customer</option>
+                                @foreach($types as $type)
+                                    <option value="{{ $type->id }}">{{ $type->type }}</option>
+                                @endforeach
                             </select>
                         </div>
 

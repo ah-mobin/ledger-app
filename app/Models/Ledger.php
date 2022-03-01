@@ -34,29 +34,29 @@ class Ledger extends Model
      *
      * @return void
      */
-//    protected static function booted()
-//    {
-//        static::created(function ($ledger) {
-//            try{
-//                if($ledger->type != "Ledger Open"){
-//                    $instance = Ledger::find($ledger->id);
-//                    $balance = Ledger::whereCustomerId($instance->customer_id)->orderBy('id','desc')->get()[1]->balance;
-//
-//                    if($ledger->type == 'Due Added'){
-//                        $instance->balance = $balance + $instance->amount;
-//                    }
-//
-//                    if($ledger->type == 'Due Deducted'){
-//                        $instance->balance = $balance - $instance->amount;
-//                    }
-//
-//                    $instance->save();
-//                }
-//            }catch(\Exception | \Throwable $e){
-//                Log::critical($e->getMessage());
-//            }
-//        });
-//    }
+    protected static function booted()
+    {
+        static::created(function ($ledger) {
+            try{
+                if($ledger->type != "Ledger Open"){
+                    $instance = Ledger::find($ledger->id);
+                    $balance = Ledger::whereCustomerId($instance->customer_id)->orderBy('id','desc')->get()[1]->balance;
+
+                    if($ledger->type == 'Due Added'){
+                        $instance->balance = $balance + $instance->amount;
+                    }
+
+                    if($ledger->type == 'Due Deducted'){
+                        $instance->balance = $balance - $instance->amount;
+                    }
+
+                    $instance->save();
+                }
+            }catch(\Exception | \Throwable $e){
+                Log::critical($e->getMessage());
+            }
+        });
+    }
 
 
     public function customer(): BelongsTo
@@ -64,7 +64,13 @@ class Ledger extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function balance(){
+    public function balance(): BelongsTo
+    {
         return $this->belongsTo(Balance::class,'customer_id','customer_id');
+    }
+
+    public function paymentType(): BelongsTo
+    {
+        return $this->belongsTo(PaymentType::class);
     }
 }

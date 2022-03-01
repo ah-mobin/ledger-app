@@ -59,12 +59,36 @@ class LedgerController extends Controller
     {
         try{
             Ledger::create([
-                'customer_id' => $request->customer_id,
+                'payment_type_id' => $request->customer_id,
                 'type' => $request->type,
                 'date' => $request->date ?? Carbon::now(),
                 'amount' => $request->amount,
             ]);
             session()->flash('success','Ledger Update Successful');
+            return back();
+        }catch(\Exception | \Throwable $e){
+            Log::critical($e->getMessage());
+            session()->flash('danger','Something Went Wrong');
+            return view('errors.500');
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  LedgerRequest  $request
+     * @param  Ledger  $ledger
+     * @return RedirectResponse|View
+     */
+    public function update(LedgerRequest  $request, Ledger  $ledger): RedirectResponse|View
+    {
+        try{
+            Ledger::whereId($ledger->id)->update([
+                'payment_type_id' => $request->type,
+                'date' => $request->date ?? Carbon::now(),
+                'amount' => $request->amount,
+            ]);
+            session()->flash('success','Customer Updated Successful');
             return back();
         }catch(\Exception | \Throwable $e){
             Log::critical($e->getMessage());
