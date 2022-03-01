@@ -7,7 +7,7 @@ use App\Http\Requests\CustomerStoreRequest;
 use App\Http\Requests\CustomerUpdateRequest;
 use App\Models\Ledger;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
@@ -15,40 +15,30 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function index(): View|string
+    public function index(): View
     {
         try{
+            $title = "Customers";
             $customers = Customer::search(request('search'))->paginate();
             $total = Ledger::where('type','Due Added')->sum('amount');
             $deducts = Ledger::where('type','Due Deducted')->sum('amount');
             $dues = $total - $deducts;
-            return view('customers.index',compact('customers','dues'));
+            return view('customers.index',compact('customers','dues','title'));
         }catch(\Exception | \Throwable $e){
             Log::critical($e->getMessage());
-            session()->flash('danger','Something Went Wrong');
-            return back();
+            return view('errors.500');
         }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  App\Http\Requests\CustomerStoreRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param  CustomerStoreRequest  $request
+     * @return RedirectResponse|View
      */
-    public function store(CustomerStoreRequest $request): View|string
+    public function store(CustomerStoreRequest $request): View|RedirectResponse
     {
         try{
             Customer::create([
@@ -57,44 +47,22 @@ class CustomerController extends Controller
                 'phone_number' => $request->phone_number,
             ]);
             session()->flash('success','Customer Created Successful');
+            return back();
         }catch(\Exception | \Throwable $e){
             Log::critical($e->getMessage());
             session()->flash('danger','Something Went Wrong');
+            return view('errors.500');
         }
-
-        return back();
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Customer $customer)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Customer $customer)
-    {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  App\Http\Requests\CustomerUpdateRequest  $request
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
+     * @param  CustomerUpdateRequest  $request
+     * @param  Customer  $customer
+     * @return RedirectResponse|View
      */
-    public function update(CustomerUpdateRequest $request, Customer $customer): View|string
+    public function update(CustomerUpdateRequest $request, Customer $customer): RedirectResponse|View
     {
         try{
             Customer::whereId($customer->id)->update([
@@ -103,30 +71,30 @@ class CustomerController extends Controller
                 'phone_number' => $request->phone_number,
             ]);
             session()->flash('success','Customer Updated Successful');
+            return back();
         }catch(\Exception | \Throwable $e){
             Log::critical($e->getMessage());
             session()->flash('danger','Something Went Wrong');
+            return view('errors.500');
         }
-
-        return back();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
+     * @param  Customer  $customer
+     * @return RedirectResponse|View
      */
-    public function destroy(Customer $customer): View|string
+    public function destroy(Customer $customer): RedirectResponse|View
     {
         try{
             Customer::whereId($customer->id)->delete();
             session()->flash('success','Customer Removed Successful');
+            return back();
         }catch(\Exception | \Throwable $e){
             Log::critical($e->getMessage());
             session()->flash('danger','Something Went Wrong');
+            return view('errors.500');
         }
-
-        return back();
     }
 }

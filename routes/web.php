@@ -24,7 +24,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::redirect('home','customers');
 
 Route::middleware('auth')->group(function () {
-    Route::resource('customers', \App\Http\Controllers\CustomerController::class);
+    Route::resource('customers', \App\Http\Controllers\CustomerController::class)->except(['show','edit','create']);
     Route::get('customers/{id}/ledger', [\App\Http\Controllers\LedgerController::class, 'index'])->name('customers.ledger.index');
     Route::post('customers/{id}/ledger', [\App\Http\Controllers\LedgerController::class, 'store'])->name('customers.ledger.store');
 

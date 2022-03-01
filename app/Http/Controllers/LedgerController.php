@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\Ledger;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 
 class LedgerController extends Controller
@@ -14,14 +15,16 @@ class LedgerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param App\Models\Customer $customer
-     * @return \Illuminate\Http\Response
+     * @param Customer $id
+     * @return RedirectResponse|View
      */
-    public function index($id): View|string
+    public function index(Customer $id): RedirectResponse|View
     {
         try{
+            $title = "Customer Ledger";
+
             $customer = Ledger::whereCustomerId($id)->latest()->first();
-            
+
             $ledger = Ledger::query()
                         ->when(request('date'),function($query){
                             $query->where('date',request('date'));
@@ -34,11 +37,11 @@ class LedgerController extends Controller
                         ->where('customer_id',$id)
                         ->paginate();
 
-            return view('ledger.index',compact('ledger','customer'));
+            return view('ledger.index',compact('ledger','customer','title'));
         }catch(\Exception | \Throwable $e){
             Log::critical($e->getMessage());
             session()->flash('danger','Something Went Wrong');
-            return back();
+            return view('errors.500');
         }
     }
 
@@ -46,10 +49,10 @@ class LedgerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  App\Http\Requests\LedgerRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param  LedgerRequest  $request
+     * @return RedirectResponse|View
      */
-    public function store(LedgerRequest $request): View|string
+    public function store(LedgerRequest $request): RedirectResponse|View
     {
         try{
             Ledger::create([
@@ -63,7 +66,7 @@ class LedgerController extends Controller
         }catch(\Exception | \Throwable $e){
             Log::critical($e->getMessage());
             session()->flash('danger','Something Went Wrong');
-            return back();
+            return view('errors.500');
         }
     }
 }
