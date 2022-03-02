@@ -9,6 +9,7 @@ use App\Models\PaymentType;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class LedgerController extends Controller
@@ -57,16 +58,19 @@ class LedgerController extends Controller
      */
     public function store(LedgerRequest $request): RedirectResponse|View
     {
+        DB::beginTransaction();
         try{
             Ledger::create([
-                'payment_type_id' => $request->customer_id,
-                'type' => $request->type,
+                'customer_id' => $request->customer_id,
+                'payment_type_id' => $request->type,
                 'date' => $request->date ?? Carbon::now(),
                 'amount' => $request->amount,
             ]);
+            DB::commit();
             session()->flash('success','Ledger Update Successful');
             return back();
         }catch(\Exception | \Throwable $e){
+            DB::rollBack();
             Log::critical($e->getMessage());
             session()->flash('danger','Something Went Wrong');
             return view('errors.500');
@@ -83,11 +87,11 @@ class LedgerController extends Controller
     public function update(LedgerRequest  $request, Ledger  $ledger): RedirectResponse|View
     {
         try{
-            Ledger::whereId($ledger->id)->update([
-                'payment_type_id' => $request->type,
-                'date' => $request->date ?? Carbon::now(),
-                'amount' => $request->amount,
-            ]);
+            $ledger = Ledger::findOrFail($ledger->id);
+            $ledger->payment_type_id = $request->payment_type_id;
+            $ledger->amount = $request->amount;
+            $ledger->date = $request->date ?? $ledger->date;
+            $ledger->save();
             session()->flash('success','Customer Updated Successful');
             return back();
         }catch(\Exception | \Throwable $e){

@@ -29,36 +29,6 @@ class Ledger extends Model
     ];
 
 
-    /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
-    protected static function booted()
-    {
-        static::created(function ($ledger) {
-            try{
-                if($ledger->type != "Ledger Open"){
-                    $instance = Ledger::find($ledger->id);
-                    $balance = Ledger::whereCustomerId($instance->customer_id)->orderBy('id','desc')->get()[1]->balance;
-
-                    if($ledger->type == 'Due Added'){
-                        $instance->balance = $balance + $instance->amount;
-                    }
-
-                    if($ledger->type == 'Due Deducted'){
-                        $instance->balance = $balance - $instance->amount;
-                    }
-
-                    $instance->save();
-                }
-            }catch(\Exception | \Throwable $e){
-                Log::critical($e->getMessage());
-            }
-        });
-    }
-
-
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);

@@ -2,18 +2,20 @@
 
 namespace App\Http\Rules;
 
+use App\Constants\PaymentTypeConstants;
+use App\Models\Balance;
 use App\Models\Ledger;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 
 class CheckLedgerAmount implements Rule
 {
-    private $type;
+    private $customerId;
     private $amount;
 
-    public function __construct($type, $amount)
+    public function __construct($customerId, $amount)
     {
-        $this->type = $type;
+        $this->customerId = $customerId;
         $this->amount = $amount;
     }
 
@@ -27,8 +29,8 @@ class CheckLedgerAmount implements Rule
     public function passes($attribute, $value): bool
     {
         try{
-            $balance = Ledger::whereCustomerId($value)->orderBy('id','desc')->first()->balance;
-            if(($this->type == 'Due Deducted') && ($balance - $this->amount < 0)){
+            $balance = Balance::whereCustomerId($this->customerId)->first()->bonus_amount;
+            if(($value == PaymentTypeConstants::PAYMENT_BY_BONUS) && ($balance - $this->amount < 0)){
                 return false;
             }
 
@@ -47,7 +49,7 @@ class CheckLedgerAmount implements Rule
     public function message(): string|array
     {
         return [
-            'Customer due balance is less than your deducted amount'
+            'Customer bonus amount is less than your deducted amount'
         ];
     }
 }

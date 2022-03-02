@@ -25,13 +25,20 @@ class LedgerRequest extends FormRequest
     public function rules()
     {
         return [
-            'customer_id' => ['required','exists:customers,id',(new CheckLedgerAmount(
-                request('type'),
-                request('amount')
-            ))],
-            'type' => 'required',
-            'date' => 'nullable',
-            'amount' => 'required|integer|gt:0',
+            'customer_id' => [
+                'required',
+                'exists:customers,id'
+            ],
+            'type' => [
+                'required',
+                (new CheckLedgerAmount(request('customer_id'),request('amount')))
+            ],
+            'date' => [
+                'nullable'
+            ],
+            'amount' => [
+                'required','integer','gt:0'
+            ],
         ];
     }
 }
