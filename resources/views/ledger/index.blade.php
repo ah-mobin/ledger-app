@@ -25,9 +25,11 @@
 
                 <div>
                     <form action="{{ route('customers.ledger.index',$customer->customer_id) }}" method="GET" class="w-75 d-flex justify-content-between my-3">
-                        <input type="date" class="form-control" name="date">
+                        <input type="date" class="form-control" name="from_date">
+                        <input type="date" class="form-control" name="to_date">
                         <select name="type" class="form-control">
                             <option selected disabled>Choose Type</option>
+                            <option value="all">All</option>
                             @foreach($types as $type)
                                 <option value="{{ $type->id }}">{{ $type->type }}</option>
                             @endforeach
@@ -71,7 +73,7 @@
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="ledgerEditLabel">Ledger Update</h5>
                                         </div>
-                                        <form action="{{ route('customers.ledger.store',$item->id) }}" method="POST">
+                                        <form action="{{ route('customers.ledger.update',[$customer->customer_id,$item->id]) }}" method="POST">
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group mb-3">
@@ -109,7 +111,7 @@
                             @endif
                         @empty
                             <tr>
-                                <td colspan="3" class="text-center">
+                                <td colspan="4" class="text-center">
                                     No Data Found
                                 </td>
                             </tr>
@@ -125,8 +127,9 @@
             </div>
 
 
-            <div class="card mt-4">
-{{--                <h2 class="text-danger">Total Due: {{ config('settngs.currency') .' '.$customer->balance }}</h2>--}}
+            <div class="card d-flex justify-content-between mt-4 p-2">
+               <h3 class="text-danger">Total Due: {{ config('settings.currency') }} {{ $customer->balance->due_amount }}</h3>
+               <h3 class="text-danger">Total Balance: {{ config('settings.currency') }} {{ $customer->balance->customer_balance }}</h3>
             </div>
         </div>
     </div>

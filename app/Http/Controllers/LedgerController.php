@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\PaymentTypeConstants;
 use App\Http\Requests\LedgerRequest;
 use App\Models\Customer;
 use App\Models\Ledger;
@@ -29,9 +30,11 @@ class LedgerController extends Controller
 
             $types = PaymentType::select('id','type')->get();
 
+
+
             $ledger = Ledger::query()
-                        ->when(request('date'),function($query){
-                            $query->where('date',request('date'));
+                        ->when(request('from_date'),function($query){
+                            $query->whereBetween('date',[request('from_date'),request('to_date') ?? Carbon::today()->format('y-m-d')]);
                         })
                         ->when(request('type'),function($query){
                             if(request('type') != 'all'){
