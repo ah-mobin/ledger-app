@@ -81,6 +81,9 @@
                                                     <select name="type" class="form-control" id="type">
                                                         <option selected disabled>Select an option</option>
                                                         @foreach($types as $type)
+                                                            @if($type->id == \App\Constants\PaymentTypeConstants::LEDGER_OPEN)
+                                                            @continue
+                                                            @endif
                                                             <option value="{{ $type->id }}" @selected($type->id == $item->payment_type_id)>{{ $type->type }}</option>
                                                         @endforeach
                                                     </select>
@@ -149,6 +152,9 @@
                             <select name="type" class="form-control" id="type">
                                 <option selected disabled>Select an option</option>
                                 @foreach($types as $type)
+                                    @if($type->id == \App\Constants\PaymentTypeConstants::LEDGER_OPEN)
+                                    @continue
+                                    @endif
                                     <option value="{{ $type->id }}">{{ $type->type }}</option>
                                 @endforeach
                             </select>
