@@ -42,6 +42,7 @@ class LedgerController extends Controller
                             }
                         })
                         ->where('customer_id',$id)
+                        ->orderBy('id','desc')
                         ->paginate();
 
             return view('ledger.index',compact('ledger','customer','title','types'));

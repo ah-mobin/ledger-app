@@ -129,10 +129,10 @@
                 @endif
             </div>
 
-
-            <div class="card d-flex justify-content-between mt-4 p-2">
-               <h3 class="text-danger">Total Due: {{ config('settings.currency') }} {{ $customer->balance->due_amount }}</h3>
-               <h3 class="text-danger">Total Balance: {{ config('settings.currency') }} {{ $customer->balance->customer_balance }}</h3>
+            <div class="mt-4 p-2 d-flex justify-content-between">
+                <h3 class="text-danger">Total Due: {{ config('settings.currency') }} {{ $customer->balance->due_amount }}</h3>
+                <h3 class="text-green">Total Balance: {{ config('settings.currency') }} {{ $customer->balance->customer_balance }}</h3>
+                <h3 class="text-info">Total Bonus: {{ config('settings.currency') }} {{ $customer->balance->bonus_amount }}</h3>
             </div>
         </div>
     </div>

@@ -23,7 +23,7 @@ class CustomerController extends Controller
     {
         try{
             $title = "Customers";
-            $customers = Customer::search(request('search'))->paginate();
+            $customers = Customer::search(request('search'))->orderBy('id','desc')->paginate();
             $totalDues = Balance::sum('due_amount');
             $totalCustomerBalance = Balance::sum('customer_balance');
             return view('customers.index',compact('customers','totalDues','totalCustomerBalance','title'));
