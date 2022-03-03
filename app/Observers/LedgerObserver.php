@@ -25,7 +25,7 @@ class LedgerObserver
                 if($getBalance->customer_balance > 0){
                     $dueBalanceCalc = $getBalance->customer_balance - $ledger->amount;
                     $getBalance->customer_balance = $dueBalanceCalc < 0 ? 0 : $dueBalanceCalc;
-                    $getBalance->due_amount = abs($dueBalanceCalc);
+                    $getBalance->due_amount = $dueBalanceCalc < 0 ? abs($dueBalanceCalc) : $getBalance->due_amount;
                 }else{
                     $getBalance->due_amount = $getBalance->due_amount + $ledger->amount;
                 }
@@ -44,7 +44,7 @@ class LedgerObserver
             }
 
             if($ledger->payment_type_id == PaymentTypeConstants::BONUS_ADD){
-                $getBalance->bonus_amount = $getBalance->bonus_amount + $ledger->amount;
+                $getBalance->bonus_amount += $ledger->amount;
             }
 
             if($ledger->payment_type_id == PaymentTypeConstants::PAYMENT_BY_BONUS){
