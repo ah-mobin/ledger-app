@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants\PaymentTypeConstants;
 use App\Http\Requests\LedgerRequest;
+use App\Models\Balance;
 use App\Models\Customer;
 use App\Models\Ledger;
 use App\Models\PaymentType;
@@ -88,17 +89,20 @@ class LedgerController extends Controller
      * @param  Ledger  $ledger
      * @return RedirectResponse|View
      */
-    public function update(LedgerRequest  $request, Ledger  $ledger): RedirectResponse|View
+    public function update(LedgerRequest  $request,$customerId,$ledgerId): RedirectResponse|View
     {
+        DB::beginTransaction();
         try{
-            $ledger = Ledger::findOrFail($ledger->id);
-            $ledger->payment_type_id = $request->payment_type_id;
-            $ledger->amount = $request->amount;
-            $ledger->date = $request->date ?? $ledger->date;
-            $ledger->save();
+            $ledgerInstance = Ledger::findOrFail($ledgerId);
+            $ledgerInstance->payment_type_id = $request->type;
+            $ledgerInstance->amount = $request->amount;
+            $ledgerInstance->date = $request->date ?? $ledgerInstance->date;
+            $ledgerInstance->save();
+            DB::commit();
             session()->flash('success','Customer Updated Successful');
             return back();
         }catch(\Exception | \Throwable $e){
+            DB::rollBack();
             Log::critical($e->getMessage());
             session()->flash('danger','Something Went Wrong');
             return view('errors.500');
