@@ -77,27 +77,29 @@
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group mb-3">
-                                                    <label for="type">Type</label>
-                                                    <select name="type" class="form-control" id="type">
+                                                    <label for="typeEdit">Type</label>
+                                                    <select name="type" class="form-control" id="typeEdit">
                                                         <option selected disabled>Select an option</option>
                                                         @foreach($types as $type)
                                                             @if($type->id == \App\Constants\PaymentTypeConstants::LEDGER_OPEN)
                                                             @continue
                                                             @endif
-                                                            <option value="{{ $type->id }}" @selected($type->id == $item->payment_type_id)>{{ $type->type }}</option>
+                                                            <option value="{{ $type->id }}"
+                                                                    @selected($type->id == $item->payment_type_id)
+                                                                >{{ $type->type }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
 
                                                 <div class="form-group mb-3">
-                                                    <label for="date">Date</label>
+                                                    <label for="dateEdit">Date</label>
                                                     <input type="text" class="form-control" readonly disabled value="{{ $item->date->format('d/m/y') }}">
-                                                    <input type="date" name="date" class="form-control" id="date">
+                                                    <input type="date" name="date" class="form-control" id="dateEdit">
                                                 </div>
 
                                                 <div class="form-group mb-3">
-                                                    <label for="amount">Amount ({{ config('settings.currency') }})</label>
-                                                    <input type="number" name="amount" class="form-control" value="{{ $item->amount }}" id="amount">
+                                                    <label for="amountEdit">Amount ({{ config('settings.currency') }})</label>
+                                                    <input type="number" name="amount" class="form-control" value="{{ $item->amount }}" id="amountEdit">
                                                 </div>
 
                                                 <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
@@ -155,7 +157,12 @@
                                     @if($type->id == \App\Constants\PaymentTypeConstants::LEDGER_OPEN)
                                     @continue
                                     @endif
-                                    <option value="{{ $type->id }}">{{ $type->type }}</option>
+                                    <option value="{{ $type->id }}">
+                                        {{ $type->type }}
+                                        @if($type->id == \App\Constants\PaymentTypeConstants::PAYMENT_BY_BONUS)
+                                             <span style="color: green">(You Have Bonus : {{ config('settings.currency') }}{{ $customer->balance->bonus_amount }})</span>
+                                        @endif
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -181,4 +188,19 @@
             </div>
         </div>
     </div>
+
+    <input type="hidden" id="bonusAmount" value="{{ $customer->balance->bonus_amount }}">
+@endsection
+
+@section('custom_scripts')
+    <script>
+        $("select#type").change(function(){
+            var bonusAmount = $("#bonusAmount").val();
+            var selectedType = $(this).children("option:selected").val();
+            if(selectedType === 5){
+                $('#amount').attr(max,bonusAmount)
+            }
+        });
+    </script>
+
 @endsection
