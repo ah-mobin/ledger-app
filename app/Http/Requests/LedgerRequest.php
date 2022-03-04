@@ -39,6 +39,9 @@ class LedgerRequest extends FormRequest
             'amount' => [
                 'required','integer','gt:0'
             ],
+            'remarks' => [
+                'nullable|string'
+            ]
         ];
     }
 }

@@ -16,7 +16,8 @@ class Ledger extends Model
         'customer_id',
         'payment_type_id',
         'amount',
-        'date'
+        'date',
+        'remarks'
     ];
 
     /**

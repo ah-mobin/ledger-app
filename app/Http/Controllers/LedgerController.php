@@ -67,6 +67,7 @@ class LedgerController extends Controller
                 'payment_type_id' => $request->type,
                 'date' => $request->date ?? Carbon::now(),
                 'amount' => $request->amount,
+                'remarks' => $request->remarks,
             ]);
             DB::commit();
             session()->flash('success','Ledger Update Successful');
@@ -94,9 +95,10 @@ class LedgerController extends Controller
             $ledgerInstance->payment_type_id = $request->type;
             $ledgerInstance->amount = $request->amount;
             $ledgerInstance->date = $request->date ?? $ledgerInstance->date;
+            $ledgerInstance->remarks = $request->remarks;
             $ledgerInstance->save();
             DB::commit();
-            session()->flash('success','Customer Updated Successful');
+            session()->flash('success','Ledger Updated Successful');
             return back();
         }catch(\Exception | \Throwable $e){
             DB::rollBack();

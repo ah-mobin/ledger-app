@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('payment_type_id')->constrained();
             $table->integer('amount');
             $table->date('date');
+            $table->text('remarks')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -37,5 +37,7 @@ Route::middleware('auth')->group(function () {
 Route::get('system-reset',function(){
     Artisan::call('migrate:fresh');
     Artisan::call('db:seed --class="UserTableSeeder"');
-    Artisan::call('db:seed --class="CustomerTableSeeder"');
+//    Artisan::call('db:seed --class="CustomerTableSeeder"');
+    Artisan::call('db:seed --class="PaymentTypeSeeder"');
+    Artisan::call('optimize:clear');
 });
