@@ -194,13 +194,16 @@
 
 @section('custom_scripts')
     <script>
-        $("select#type").change(function(){
-            var bonusAmount = $("#bonusAmount").val();
-            var selectedType = $(this).children("option:selected").val();
-            if(selectedType === 5){
-                $('#amount').attr(max,bonusAmount)
-            }
+
+        $(document).ready(function(){
+            $("select#type").change(function(){
+                var selectedType = $(this).children("option:selected").val();
+                if(selectedType === 5){
+                    $('#amount').attr('max', $('#bonusAmount').val())
+                }
+            });
         });
+
     </script>
 
 @endsection

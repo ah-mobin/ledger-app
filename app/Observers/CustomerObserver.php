@@ -45,6 +45,17 @@ class CustomerObserver
         //
     }
 
+
+    /**
+     * Handle the Customer "deleting" event.
+     *
+     * @param  \App\Models\Customer  $customer
+     * @return void
+     */
+    public function deleting(Customer $customer)
+    {
+        //
+    }
     /**
      * Handle the Customer "deleted" event.
      *

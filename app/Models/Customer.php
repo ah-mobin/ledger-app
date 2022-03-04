@@ -24,6 +24,15 @@ class Customer extends Model
         'email'
     ];
 
+//    public static function boot() {
+//        parent::boot();
+//
+//        static::deleting(function($customer) {
+//            Ledger::whereCustomerId($customer->id)->delete();
+//            Balance::whereCustomerId($customer->id)->delete();
+//        });
+//    }
+
 
     public function customerLedger(): HasMany
     {

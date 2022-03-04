@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\PaymentTypeConstants;
 use App\Http\Requests\LedgerRequest;
-use App\Models\Balance;
-use App\Models\Customer;
 use App\Models\Ledger;
 use App\Models\PaymentType;
 use Carbon\Carbon;

@@ -58,9 +58,9 @@
                                     <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#customerEdit{{ $customer->id }}" title="Edit Customer Info">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-danger mx-3" data-bs-toggle="modal" data-bs-target="#customerRemove{{ $customer->id }}" title="Remove Customer Data">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
+{{--                                    <button type="button" class="btn btn-sm btn-danger mx-3" data-bs-toggle="modal" data-bs-target="#customerRemove{{ $customer->id }}" title="Remove Customer Data">--}}
+{{--                                        <i class="fa fa-trash"></i>--}}
+{{--                                    </button>--}}
                                     <a href="{{ route('customers.ledger.index',$customer->id) }}" class="btn btn-sm btn-info" title="View Customer Ledger"><i class="fa fa-file"></i></a>
                                 </td>
                             </tr>

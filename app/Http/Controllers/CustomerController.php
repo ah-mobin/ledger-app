@@ -91,11 +91,16 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer): RedirectResponse|View
     {
+        DB::beginTransaction();
         try{
+            Ledger::whereCustomerId($customer->id)->delete();
+            Balance::whereCustomerId($customer->id)->delete();
             Customer::whereId($customer->id)->delete();
+            DB::commit();
             session()->flash('success','Customer Removed Successful');
             return back();
         }catch(\Exception | \Throwable $e){
+            DB::rollBack();
             Log::critical($e->getMessage());
             session()->flash('danger','Something Went Wrong');
             return view('errors.500');
