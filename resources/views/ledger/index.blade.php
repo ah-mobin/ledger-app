@@ -45,6 +45,7 @@
                             <th>{{ __('Date') }}</th>
                             <th>{{ __('Type') }}</th>
                             <th>{{ __('Amount') }} ({{ config('settings.currency') }})</th>
+                            <th>{{ __('Remarks') }}</th>
                             <th>{{ __('Update') }}</th>
                         </tr>
                         </thead>
@@ -54,6 +55,7 @@
                                 <td>{{ $item->date->format('Y-m-d') }}</td>
                                 <td>{{ $item->paymentType->type }}</td>
                                 <td>{{ $item->amount }}</td>
+                                <td>{{ $item->remarks ?? '' }}</td>
                                 <td>
                                     @if($item->payment_type_id != \App\Constants\PaymentTypeConstants::LEDGER_OPEN)
                                     <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#ledgerEdit{{ $item->id }}" title="Edit Ledger Data">
@@ -102,12 +104,17 @@
                                                     <input type="number" name="amount" class="form-control" value="{{ $item->amount }}" id="amountEdit">
                                                 </div>
 
+                                                <div class="form-group mb-3">
+                                                    <label for="remarksEdit">Remarks</label>
+                                                    <textarea name="remarks" class="form-control" id="remarksEdit">{{ $item->remarks }}</textarea>
+                                                </div>
+
                                                 <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
 
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary btn-sm">Create</button>
+                                                <button type="submit" class="btn btn-primary btn-sm">Update</button>
                                             </div>
                                         </form>
                                     </div>
@@ -175,6 +182,11 @@
                         <div class="form-group mb-3">
                             <label for="amount">Amount ({{ config('settings.currency') }})</label>
                             <input type="number" name="amount" class="form-control" placeholder="500" value="{{ old('amount') }}" id="amount">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="remarks">Remarks</label>
+                            <textarea name="remarks" class="form-control" id="remarks" placeholder="Write a note">{{ old('remarks') }}</textarea>
                         </div>
 
                         <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
