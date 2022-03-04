@@ -9,7 +9,8 @@ class ProfileController extends Controller
 {
     public function show()
     {
-        return view('auth.profile');
+        $title = 'Profile';
+        return view('auth.profile',compact('title'));
     }
 
     public function update(ProfileUpdateRequest $request)
