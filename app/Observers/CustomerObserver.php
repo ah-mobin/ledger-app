@@ -23,7 +23,8 @@ class CustomerObserver
             'customer_id' => $customer->id,
             'payment_type_id' => PaymentTypeConstants::LEDGER_OPEN,
             'amount' => 0,
-            'date' => Carbon::now()
+            'date' => Carbon::now(),
+            'remarks' => 'Ledger Open'
         ]);
 
         Balance::create([

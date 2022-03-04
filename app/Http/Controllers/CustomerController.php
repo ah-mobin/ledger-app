@@ -26,7 +26,9 @@ class CustomerController extends Controller
             $customers = Customer::search(request('search'))->orderBy('id','desc')->paginate();
             $totalDues = Balance::sum('due_amount');
             $totalCustomerBalance = Balance::sum('customer_balance');
-            return view('customers.index',compact('customers','totalDues','totalCustomerBalance','title'));
+            $totalCustomerBonus = Balance::sum('bonus_amount');
+            $netDues = $totalDues - ($totalCustomerBalance + $totalCustomerBonus);
+            return view('customers.index',compact('customers','totalDues','totalCustomerBalance','totalCustomerBonus','netDues','title'));
         }catch(\Exception | \Throwable $e){
             Log::critical($e->getMessage());
             return view('errors.500');

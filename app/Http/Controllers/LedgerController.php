@@ -39,6 +39,9 @@ class LedgerController extends Controller
                                 $query->where('payment_type_id',request('type'));
                             }
                         })
+                        ->when(request('remarks'),function($query){
+                            $query->where('remarks','LIKE','%'.request('remarks').'%');
+                        })
                         ->where('customer_id',$id)
                         ->orderBy('id','desc')
                         ->paginate();

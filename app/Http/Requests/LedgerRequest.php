@@ -40,7 +40,7 @@ class LedgerRequest extends FormRequest
                 'required','integer','gt:0'
             ],
             'remarks' => [
-                'nullable|string'
+                'nullable'
             ]
         ];
     }

@@ -26,7 +26,7 @@ class CustomerStoreRequest extends FormRequest
         return [
             'name' => 'required|string|max:64',
             'email' => 'nullable|email|unique:customers,email|max:64',
-            'phone_number' => 'required|unique:customers,phone_number|max:32'
+            'phone_number' => 'nullable|unique:customers,phone_number|max:32'
         ];
     }
 }

@@ -4,20 +4,23 @@
     <div class="container-xl">
         <!-- Page title -->
         <div class="page-header d-print-none">
-            <h2 class="page-title float-left">
-                {{ __('Customers') }}
+            <h2 class="page-title">
+                {{ __('Customers Data') }}
             </h2>
         </div>
     </div>
     <div class="page-body">
         <div class="container-xl">
+            <div class="text-center">
+                <h2 class="{{ $netDues >= 0 ? 'text-success' : 'text-danger' }}">Net Dues: {{ config('settings.currency') }} {{ $netDues }}</h2>
+            </div>
 
             @include('layouts.flash_alerts')
 
             <div class="alert alert-info d-flex justify-content-between">
-                <div class="alert-title">Customer Data</div>
-                <h3 class="text-danger ">Total Dues: {{ config('settings.currency') }} {{ $totalDues }}</h3>
+                <h3 class="text-success ">Total Dues: {{ config('settings.currency') }} {{ $totalDues }}</h3>
                 <h3 class="text-danger ">Total Customer Balances: {{ config('settings.currency') }} {{ $totalCustomerBalance }}</h3>
+                <h3 class="text-danger ">Total Customer Bonus: {{ config('settings.currency') }} {{ $totalCustomerBonus }}</h3>
                 <button type="button" class="btn btn-sm btn-success rounder" data-bs-toggle="modal" data-bs-target="#customerAdd">
                     Add Customer
                 </button>
@@ -55,13 +58,10 @@
                                 <td>{{ $customer->customerBalance->customer_balance }}</td>
                                 <td>{{ $customer->created_at->diffForhumans() }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#customerEdit{{ $customer->id }}" title="Edit Customer Info">
+                                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#customerEdit{{ $customer->id }}" title="Edit Customer Info">
                                         <i class="fa fa-edit"></i>
                                     </button>
-{{--                                    <button type="button" class="btn btn-sm btn-danger mx-3" data-bs-toggle="modal" data-bs-target="#customerRemove{{ $customer->id }}" title="Remove Customer Data">--}}
-{{--                                        <i class="fa fa-trash"></i>--}}
-{{--                                    </button>--}}
-                                    <a href="{{ route('customers.ledger.index',$customer->id) }}" class="btn btn-sm btn-info" title="View Customer Ledger"><i class="fa fa-file"></i></a>
+                                    <a href="{{ route('customers.ledger.index',$customer->id) }}" class="btn btn-info ms-5" title="View Customer Ledger"><i class="fa fa-file"></i></a>
                                 </td>
                             </tr>
 
@@ -94,9 +94,9 @@
                         </div>
 
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success submitReq">Update</button>
                     </div>
                 </form>
             </div>
@@ -118,7 +118,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success btn-sm" data-bs-dismiss="modal">No</button>
-                        <button type="submit" class="btn btn-danger btn-sm">Yes</button>
+                        <button type="submit" class="btn btn-danger btn-sm submitReq">Yes</button>
                     </div>
                 </form>
             </div>
@@ -163,9 +163,9 @@
                         </div>
 
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary btn-sm">Create</button>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success submitReq">Create</button>
                     </div>
                 </form>
             </div>

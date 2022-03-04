@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +38,7 @@ Route::middleware('auth')->group(function () {
 Route::get('system-reset',function(){
     Artisan::call('migrate:fresh');
     Artisan::call('db:seed --class="UserTableSeeder"');
-//    Artisan::call('db:seed --class="CustomerTableSeeder"');
     Artisan::call('db:seed --class="PaymentTypeSeeder"');
+    Artisan::call('db:seed --class="CustomerTableSeeder"');
     Artisan::call('optimize:clear');
 });

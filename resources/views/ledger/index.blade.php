@@ -16,7 +16,7 @@
 
             <div class="alert alert-info overflow-hidden">
                 <div class="alert-title float-start">Ledger Data: Customer -> <span class="text-danger"> {{ $customer->customer->name }} </span> </div>
-                <button type="button" class="btn btn-sm btn-success rounder float-end" data-bs-toggle="modal" data-bs-target="#customerLedgerAdd">
+                <button type="button" class="btn btn-success rounder float-end" data-bs-toggle="modal" data-bs-target="#customerLedgerAdd">
                     Update Ledger
                 </button>
             </div>
@@ -24,7 +24,7 @@
             <div class="card">
 
                 <div>
-                    <form action="{{ route('customers.ledger.index',$customer->customer_id) }}" method="GET" class="w-75 d-flex justify-content-between my-3">
+                    <form action="{{ route('customers.ledger.index',$customer->customer_id) }}" method="GET" class="d-flex justify-content-between my-3">
                         <input type="date" class="form-control" name="from_date">
                         <input type="date" class="form-control" name="to_date">
                         <select name="type" class="form-control">
@@ -34,6 +34,7 @@
                                 <option value="{{ $type->id }}">{{ $type->type }}</option>
                             @endforeach
                         </select>
+                        <input type="text" class="form-control" name="remarks" placeholder="search by remarks">
                         <button type="submit" class="btn btn-primary ms-2">Search</button>
                     </form>
                 </div>
@@ -58,7 +59,7 @@
                                 <td>{{ $item->remarks ?? '' }}</td>
                                 <td>
                                     @if($item->payment_type_id != \App\Constants\PaymentTypeConstants::LEDGER_OPEN)
-                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#ledgerEdit{{ $item->id }}" title="Edit Ledger Data">
+                                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ledgerEdit{{ $item->id }}" title="Edit Ledger Data">
                                         <i class="fa fa-edit"></i>
                                     </button>
                                     @endif
@@ -112,9 +113,9 @@
                                                 <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
 
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                            <div class="modal-footer d-flex justify-content-between">
+                                                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-success submitReq">Update</button>
                                             </div>
                                         </form>
                                     </div>
@@ -123,7 +124,7 @@
                             @endif
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center">
+                                <td colspan="5" class="text-center">
                                     No Data Found
                                 </td>
                             </tr>
@@ -139,9 +140,9 @@
             </div>
 
             <div class="mt-4 p-2 d-flex justify-content-between">
-                <h3 class="text-danger">Total Due: {{ config('settings.currency') }} {{ $customer->balance->due_amount }}</h3>
-                <h3 class="text-green">Total Balance: {{ config('settings.currency') }} {{ $customer->balance->customer_balance }}</h3>
-                <h3 class="text-info">Total Bonus: {{ config('settings.currency') }} {{ $customer->balance->bonus_amount }}</h3>
+                <h3 class="text-success">Total Due: {{ config('settings.currency') }} {{ $customer->balance->due_amount }}</h3>
+                <h3 class="text-danger">Total Balance: {{ config('settings.currency') }} {{ $customer->balance->customer_balance }}</h3>
+                <h3 class="text-danger">Total Bonus: {{ config('settings.currency') }} {{ $customer->balance->bonus_amount }}</h3>
             </div>
         </div>
     </div>
@@ -192,30 +193,12 @@
                         <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
 
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary btn-sm">Create</button>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success submitReq">Create</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
-    <input type="hidden" id="bonusAmount" value="{{ $customer->balance->bonus_amount }}">
-@endsection
-
-@section('custom_scripts')
-    <script>
-
-        $(document).ready(function(){
-            $("select#type").change(function(){
-                var selectedType = $(this).children("option:selected").val();
-                if(selectedType === 5){
-                    $('#amount').attr('max', $('#bonusAmount').val())
-                }
-            });
-        });
-
-    </script>
-
 @endsection
