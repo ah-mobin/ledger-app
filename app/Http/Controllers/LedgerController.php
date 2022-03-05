@@ -97,6 +97,15 @@ class LedgerController extends Controller
         DB::beginTransaction();
         try{
             $ledgerInstance = Ledger::findOrFail($ledgerId);
+
+            if($request->type == PaymentTypeConstants::PAYMENT_BY_BONUS){
+                $sumOfBonusExceptThis = Ledger::whereCustomerId($ledgerInstance->customer_id)->wherePaymentTypeId(PaymentTypeConstants::BONUS_ADD)->where('id','!=',$ledgerId)->sum('amount');
+                if($request->amount > $sumOfBonusExceptThis){
+                    session()->flash('danger','Customer bonus amount is less than your deducted amount');
+                    return back();
+                }
+            }
+
             $ledgerInstance->payment_type_id = $request->type;
             $ledgerInstance->amount = $request->amount;
             $ledgerInstance->date = $request->date ?? $ledgerInstance->date;
@@ -106,18 +115,13 @@ class LedgerController extends Controller
             $getBalance = Balance::findOrFail($ledgerInstance->customer_id);
             $sumOfDueType = Ledger::whereCustomerId($ledgerInstance->customer_id)->wherePaymentTypeId(PaymentTypeConstants::DUE_ADD)->sum('amount');
             $sumOfDuePaidType = Ledger::whereCustomerId($ledgerInstance->customer_id)->wherePaymentTypeId(PaymentTypeConstants::PAYMENT_FROM_CUSTOMER)->sum('amount');
-           
-
             $sumOfBonusType = Ledger::whereCustomerId($ledgerInstance->customer_id)->wherePaymentTypeId(PaymentTypeConstants::BONUS_ADD)->sum('amount');
-            $sumOfBonusPaidType = Ledger::whereCustomerId($ledgerInstance->customer_id)->wherePaymentTypeId(PaymentTypeConstants::PAYMENT_BY_BONUS)->sum('amount');
             $calcOfDuePaidAmount = $sumOfDueType - $sumOfDuePaidType;
             Log::debug($calcOfDuePaidAmount);
             $getBalance->due_amount = $calcOfDuePaidAmount >= 0 ? $calcOfDuePaidAmount : 0;
             $getBalance->customer_balance = $calcOfDuePaidAmount < 0 ? $calcOfDuePaidAmount : 0;
             $getBalance->bonus_amount = $sumOfBonusType;
-
             $getBalance->save();
-
             DB::commit();
             session()->flash('success','Ledger Updated Successful');
             return back();

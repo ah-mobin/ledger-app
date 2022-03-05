@@ -63,42 +63,7 @@ class LedgerObserver
      */
     public function updated(Ledger $ledger)
     {
-        // $getBalance = Balance::findOrFail($ledger->customer_id);
-        // $getBalance->due_amount = 0;
-        // $getBalance->customer_balance = 0;
-        // $getBalance->bonus_amount = 0;
-        // $getBalance->save();
-
-
-        // if(($ledger->payment_type_id == PaymentTypeConstants::DUE_ADD) || ($ledger->payment_type_id == PaymentTypeConstants::PAYMENT_FROM_CUSTOMER)){
-            // $sumOfDueType = Ledger::whereCustomerId($ledger->customer_id)->wherePaymentTypeId(PaymentTypeConstants::DUE_ADD)->sum('amount');
-            // $sumOfDuePaidType = Ledger::whereCustomerId($ledger->customer_id)->wherePaymentTypeId(PaymentTypeConstants::PAYMENT_FROM_CUSTOMER)->sum('amount');
-           
-
-            // $sumOfBonusType = Ledger::whereCustomerId($ledger->customer_id)->wherePaymentTypeId(PaymentTypeConstants::BONUS_ADD)->sum('amount');
-            // $sumOfBonusPaidType = Ledger::whereCustomerId($ledger->customer_id)->wherePaymentTypeId(PaymentTypeConstants::PAYMENT_BY_BONUS)->sum('amount');
-
-            // $calcOfDuePaidAmount = $sumOfDueType - $sumOfDuePaidType;
-            // Log::debug($calcOfDuePaidAmount);
-            // $getBalance->due_amount = $calcOfDuePaidAmount < 0 ? 0 : $calcOfDuePaidAmount;
-            // $getBalance->customer_balance = $calcOfDuePaidAmount < 0 ? abs($calcOfDuePaidAmount) : $getBalance->customer_balance;
-        // }
-
-        // if(($ledger->payment_type_id == PaymentTypeConstants::BONUS_ADD) || ($ledger->payment_type_id == PaymentTypeConstants::PAYMENT_BY_BONUS)){
-
-            // $getBalance->due_amount = $calcOfDuePaidAmount < 0 ? 0 : $calcOfDuePaidAmount;
-            // $getBalance->customer_balance = $calcOfDuePaidAmount < 0 ? abs($calcOfDuePaidAmount) : $getBalance->customer_balance;
-        // }
-
-        // if($ledger->payment_type_id == PaymentTypeConstants::BONUS_ADD){
-            // $getBalance->bonus_amount = $sumOfBonusType;
-        // }
-
-        // if($ledger->payment_type_id == PaymentTypeConstants::PAYMENT_BY_BONUS){
-            // $getBalance->bonus_amount = $getBalance->bonus_amount - $ledger->amount;
-        // }
-
-        // $getBalance->save();
+        //
     }
 
     /**
