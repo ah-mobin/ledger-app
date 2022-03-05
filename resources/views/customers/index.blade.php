@@ -74,7 +74,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="customerEditLabel">Customer Date Update</h5>
                 </div>
-                <form action="{{ route('customers.update',[$customer->id]) }}" method="POST">
+                <form action="{{ route('customers.update',[$customer->id]) }}" method="POST" class="myForm">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
@@ -96,7 +96,7 @@
                     </div>
                     <div class="modal-footer d-flex justify-content-between">
                         <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success submitReq">Update</button>
+                        <button type="submit" onclick="return Disable()" class="btn btn-success submitReq">Update</button>
                     </div>
                 </form>
             </div>
@@ -108,7 +108,7 @@
     <div class="modal fade" id="customerRemove{{ $customer->id }}" tabindex="-1" aria-labelledby="customerRemoveLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="{{ route('customers.destroy',[$customer->id]) }}" method="POST">
+                <form action="{{ route('customers.destroy',[$customer->id]) }}" method="POST" class="myForm">
                     @csrf
                     @method('DELETE')
                     <div class="modal-body text-center py-4">
@@ -118,7 +118,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success btn-sm" data-bs-dismiss="modal">No</button>
-                        <button type="submit" class="btn btn-danger btn-sm submitReq">Yes</button>
+                        <button type="submit" onclick="return Disable()" class="btn btn-danger btn-sm submitReq">Yes</button>
                     </div>
                 </form>
             </div>
@@ -144,7 +144,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="customerAddLabel">Customer Add</h5>
                 </div>
-                <form action="{{ route('customers.store') }}" method="POST">
+                <form action="{{ route('customers.store') }}" method="POST" class="myform">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group mb-3">
@@ -165,7 +165,7 @@
                     </div>
                     <div class="modal-footer d-flex justify-content-between">
                         <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success submitReq">Create</button>
+                        <button type="button" onclick="return Disable()" class="btn btn-success submitReq">Create</button>
                     </div>
                 </form>
             </div>

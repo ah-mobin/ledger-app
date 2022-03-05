@@ -79,17 +79,24 @@
 
     <!-- Core plugin JavaScript-->
     <script src="{{ asset('js/app.js') }}"></script>
-
-
-    <script
-        src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-        crossorigin="anonymous"></script>
 	
 	<script>
-		$('.submitReq').on('click',function(){
-			$('.submitReq').attr("disabled", true);
-		})
+		jQuery(document).ready(function () { 
+			Enable();
+		}); 
+
+		function Enable() { 
+			$('.submitReq').removeAttr('disabled'); 
+			$('.submitReq').removeAttr('readonly'); 
+		} 
+
+		function Disable() { 
+			$('.myform').submit();
+			$('.submitReq').attr('disabled', 'true'); 
+			$('.submitReq').attr('readonly', 'true'); 
+			return false;
+		} 
+
 	</script>
     <!-- Page level custom scripts -->
     @yield('custom_scripts')
