@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('customers', \App\Http\Controllers\CustomerController::class)->except(['show','edit','create']);
     Route::get('customers/{id}/ledger', [\App\Http\Controllers\LedgerController::class, 'index'])->name('customers.ledger.index');
     Route::post('customers/{id}/ledger', [\App\Http\Controllers\LedgerController::class, 'store'])->name('customers.ledger.store');
-    Route::post('customers/{customerId}/ledger/{ledgerId}', [\App\Http\Controllers\LedgerController::class, 'update'])->name('customers.ledger.update');
+    Route::put('customers/{customerId}/ledger/{ledgerId}', [\App\Http\Controllers\LedgerController::class, 'update'])->name('customers.ledger.update');
 
     Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
     Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');

@@ -76,8 +76,9 @@
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="ledgerEditLabel">Ledger Update</h5>
                                         </div>
-                                        <form action="{{ route('customers.ledger.update',[$customer->customer_id,$item->id]) }}" method="POST" class="myForm">
+                                        <form action="{{ route('customers.ledger.update',[$customer->customer_id,$item->id]) }}" method="POST">
                                             @csrf
+                                            @method('PUT')
                                             <div class="modal-body">
                                                 <div class="form-group mb-3">
                                                     <label for="typeEdit">Type</label>
@@ -115,7 +116,7 @@
                                             </div>
                                             <div class="modal-footer d-flex justify-content-between">
                                                 <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" onclick="return Disable()" class="btn btn-success submitReq">Update</button>
+                                                <button type="submit" class="btn btn-success">Update</button>
                                             </div>
                                         </form>
                                     </div>
@@ -154,7 +155,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="customerLedgerAddLabel">Ledger Update</h5>
                 </div>
-                <form action="{{ route('customers.ledger.store',$customer->customer_id) }}" method="POST" class="myForm">
+                <form action="{{ route('customers.ledger.store',$customer->customer_id) }}" method="POST" class="myform">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group mb-3">
@@ -195,7 +196,7 @@
                     </div>
                     <div class="modal-footer d-flex justify-content-between">
                         <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" onclick="return Disable()" class="btn btn-success submitReq">Create</button>
+                        <button type="button" onclick="return Disable()" class="btn btn-success submitReq">Create</button>
                     </div>
                 </form>
             </div>

@@ -29,7 +29,7 @@
             <div class="card">
 
                 <div>
-                    <form action="" method="GET" class="w-75 d-flex justify-content-between my-3">
+                    <form action="{{ route('customers.index') }}" method="GET" class="w-75 d-flex justify-content-between my-3">
                         <input type="text" placeholder="Search by name, email or phone number..." name="search" class="form-control">
                         <button class="btn btn-primary ms-2">Search</button>
                     </form>
@@ -74,29 +74,29 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="customerEditLabel">Customer Date Update</h5>
                 </div>
-                <form action="{{ route('customers.update',[$customer->id]) }}" method="POST" class="myForm">
+                <form action="{{ route('customers.update',$customer->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
                         <div class="form-group mb-3">
                             <label for="name">Customer Name</label>
-                            <input type="text" name="name" class="form-control" value="{{ $customer->name }}" id="name">
+                            <input type="text" name="name" class="form-control" value="{{ $customer->name }}" id="nameEdit">
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="phoneNumber">Phone Number</label>
-                            <input type="text" name="phone_number" class="form-control" value="{{ $customer->phone_number }}" id="phoneNumber">
+                            <input type="text" name="phone_number" class="form-control" value="{{ $customer->phone_number }}" id="phoneNumberEdit">
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="email">Email</label>
-                            <input type="email" name="email" class="form-control" value="{{ $customer->email }}" id="email">
+                            <input type="email" name="email" class="form-control" value="{{ $customer->email }}" id="emailEdit">
                         </div>
 
                     </div>
                     <div class="modal-footer d-flex justify-content-between">
                         <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" onclick="return Disable()" class="btn btn-success submitReq">Update</button>
+                        <button type="submit" class="btn btn-success">Update</button>
                     </div>
                 </form>
             </div>
@@ -108,7 +108,7 @@
     <div class="modal fade" id="customerRemove{{ $customer->id }}" tabindex="-1" aria-labelledby="customerRemoveLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="{{ route('customers.destroy',[$customer->id]) }}" method="POST" class="myForm">
+                <form action="{{ route('customers.destroy',[$customer->id]) }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <div class="modal-body text-center py-4">
@@ -118,7 +118,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success btn-sm" data-bs-dismiss="modal">No</button>
-                        <button type="submit" onclick="return Disable()" class="btn btn-danger btn-sm submitReq">Yes</button>
+                        <button type="button" class="btn btn-danger btn-sm">Yes</button>
                     </div>
                 </form>
             </div>

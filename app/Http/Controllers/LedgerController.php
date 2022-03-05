@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\PaymentTypeConstants;
 use App\Http\Requests\LedgerRequest;
+use App\Models\Balance;
 use App\Models\Ledger;
 use App\Models\PaymentType;
 use Carbon\Carbon;
@@ -100,6 +102,22 @@ class LedgerController extends Controller
             $ledgerInstance->date = $request->date ?? $ledgerInstance->date;
             $ledgerInstance->remarks = $request->remarks;
             $ledgerInstance->save();
+
+            $getBalance = Balance::findOrFail($ledgerInstance->customer_id);
+            $sumOfDueType = Ledger::whereCustomerId($ledgerInstance->customer_id)->wherePaymentTypeId(PaymentTypeConstants::DUE_ADD)->sum('amount');
+            $sumOfDuePaidType = Ledger::whereCustomerId($ledgerInstance->customer_id)->wherePaymentTypeId(PaymentTypeConstants::PAYMENT_FROM_CUSTOMER)->sum('amount');
+           
+
+            $sumOfBonusType = Ledger::whereCustomerId($ledgerInstance->customer_id)->wherePaymentTypeId(PaymentTypeConstants::BONUS_ADD)->sum('amount');
+            $sumOfBonusPaidType = Ledger::whereCustomerId($ledgerInstance->customer_id)->wherePaymentTypeId(PaymentTypeConstants::PAYMENT_BY_BONUS)->sum('amount');
+            $calcOfDuePaidAmount = $sumOfDueType - $sumOfDuePaidType;
+            Log::debug($calcOfDuePaidAmount);
+            $getBalance->due_amount = $calcOfDuePaidAmount >= 0 ? $calcOfDuePaidAmount : 0;
+            $getBalance->customer_balance = $calcOfDuePaidAmount < 0 ? $calcOfDuePaidAmount : 0;
+            $getBalance->bonus_amount = $sumOfBonusType;
+
+            $getBalance->save();
+
             DB::commit();
             session()->flash('success','Ledger Updated Successful');
             return back();

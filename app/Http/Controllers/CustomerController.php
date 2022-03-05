@@ -9,6 +9,7 @@ use App\Http\Requests\CustomerUpdateRequest;
 use App\Models\Ledger;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -64,11 +65,11 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  CustomerUpdateRequest  $request
+     * @param  Request  $request
      * @param  Customer  $customer
      * @return RedirectResponse|View
      */
-    public function update(CustomerUpdateRequest $request, Customer $customer): RedirectResponse|View
+    public function update(Request $request, Customer $customer)
     {
         try{
             Customer::whereId($customer->id)->update([
